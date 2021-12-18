@@ -1,11 +1,10 @@
 ﻿using Features.Clients;
-using MediatR;
-using Moq;
-using System.Linq;
-using System.Threading;
-using Xunit;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using MediatR;
+using Moq;
+using System.Threading;
+using Xunit;
 
 namespace Features.Tests
 {
