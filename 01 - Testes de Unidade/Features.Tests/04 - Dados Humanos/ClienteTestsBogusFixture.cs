@@ -2,6 +2,8 @@
 using Bogus.DataSets;
 using Features.Clients;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Features.Tests
@@ -9,8 +11,23 @@ namespace Features.Tests
     [CollectionDefinition(nameof(ClienteBogusCollection))]
     public class ClienteBogusCollection : ICollectionFixture<ClienteTestsBogusFixture> { }
     public class ClienteTestsBogusFixture : IDisposable
-    {        
+    {
         public Cliente GerarClienteValido()
+        {
+            return GerarClientes(1, true).FirstOrDefault();
+        }
+
+        public IEnumerable<Cliente> ObterClientesVariados()
+        {
+            var clientes = new List<Cliente>();
+
+            clientes.AddRange(GerarClientes(50, true).ToList());
+            clientes.AddRange(GerarClientes(50, false).ToList());
+
+            return clientes;
+        }
+
+        public IEnumerable<Cliente> GerarClientes(int quantidade, bool ativo)
         {
             var genero = new Faker().PickRandom<Name.Gender>();
 
@@ -22,13 +39,13 @@ namespace Features.Tests
                     f.Date.Past(80, DateTime.Now.AddYears(-18)),
                     DateTime.Now,
                     "",
-                    true))
+                    ativo))
                 .RuleFor(c => c.Email, (f, c) =>
                       f.Internet.Email(
                           c.Nome.ToLower(),
                           c.Sobrenome.ToLower()));
 
-            return cliente;
+            return cliente.Generate(quantidade);
         }
 
         public Cliente GerarClienteInvalido()
